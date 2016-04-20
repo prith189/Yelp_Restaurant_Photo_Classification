@@ -21,3 +21,7 @@ Stack_NN: The above two models should give us 5 files (1 from Model 1 and 4 from
 This is a multi label classification problem. However, since XGBoost does not support multi label classification out of the box, Models 1 and 2 were built as binary classfication problems. This deficiency which does not take the dependancy between the labels into account was taken care of by the ensembling stage.
 
 The ensemble was built using a Neural network, hence it was treated as a multilabel classification problem by having 9 nodes in the output layer.
+
+1. Download the data from Kaggle
+
+2. Generate train_cl.csv by 

@@ -95,7 +95,7 @@ and feat_holder_test.npy which is a num_unique_test_photosx2048 numpy array
 
 Since each business has multiple instances (photos), we need some way to
 
-condense this numtiple instance information to a single instance information
+condense this multiple instance information to a single instance information
 
 The simplest way to do this is to take the mean of all the instances per business, and assign it
 

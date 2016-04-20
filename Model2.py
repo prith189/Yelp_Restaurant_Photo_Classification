@@ -94,23 +94,21 @@ def clean_train():
 start_time = time.time()
 
 '''
-Part1:Cleaning
+Clustering
 
-After pretraining, we have two files feat_holder.npy which is a num_unique_train_photosx2048 numpy array
+In Model1, we converted the mutliple images for each business into a single feature set by
 
-and feat_holder_test.npy which is a num_unique_test_photosx2048 numpy array
+taking the mean of all the images. 
 
-Since each business has multiple instances (photos), we need some way to
+We follow a similar approach here, but instead of taking the mean of all the images
 
-condense this numtiple instance information to a single instance information
+that belong to a business, we first cluster the images, and then take the mean of all the
 
-The simplest way to do this is to take the mean of all the instances per business, and assign it
+images belonging to a cluster.
 
-as a feature vector for that business.
+We choose four different cluster sizes (2,3,4,5)
 
-At the end of this, we have a num_unique_businessx2048 array which we will use as a festure vector for training
-
-The result of this part of code is a pandas dataframe 
+A model is built for each of the clusters.
 
 '''
 
@@ -148,7 +146,7 @@ The result of this part of code is a pandas dataframe
 
 '''
 
-for num_cluster in ([2]):
+for num_cluster in ([2,3,4,5]):
 
     train_image_features = np.load('train_test_kmn.npy',mmap_mode = 'r')
     
@@ -194,13 +192,47 @@ for num_cluster in ([2]):
     
     print('time taken for cleaning',time.time()-start_time)
     
+    
+    '''
+    Part2: Estimating the performance using cross validation
+    
+    We will use 5 fold cross validation to estimate the performance of our model,
+    
+    and in the process tune the parameters of the model
+    
+    Here we will be using the xgboost package
+    
+    This part of code will also serve a second purpose
+    
+    If we would like to use this model in an ensemble at a later stage, we will save the results
+    
+    from cross validation, and use them as features in the ensembling stage
+    
+    Since xgboost doesnt have a straightforward way of training multi label classification problems,
+    
+    we will build 9 different binary classification models. However, this does not take into account the 
+    
+    realtionship between the different labels, and might not result in the best performance
+    
+    We will overcome this deficiency in the ensembling stage by using a slightly different architecture
+    
+    To calculate the fscore, we will need to use some threshold to convert the probabilites into binary labels
+    
+    The thresholding step is not very critical if our goal is to use this model only as features for the second level ensemble
+    
+    But if this model is the final model, then the thresholding parameter also needs to be tuned.
+    
+    Here, I've used 0.48 as the threshold
+    
+    
+    '''
     # Start the learning process
     
     print('Starting learning')
     
     cv = 1
     
-    submit = 0
+    submit = 1
 
     num_cv = 5
     
@@ -300,11 +332,28 @@ for num_cluster in ([2]):
     
     print('time taken for learning',time.time()-start_time)
     
+    '''
+    Part3: Training and Generating submissions on the Test Set
+    
+    Now that we have tuned the model parameters using cross validation, we will go ahead
+    
+    and use these parameters to build 9 binary classification models
+    
+    Set the submit variable to 1 only if you need to run this part, since in most cases we will only be
+    
+    playing with the cross validation part
+    
+    
+    Also, we intend to use this model in an ensemble, we will store the predictions on the test
+    
+    set, and use them later as features for the ensemble model
+    
+    '''
     if(submit):
         param['subsample'] = 0.48
         train_to_biz = pd.read_csv('train_photo_to_biz_ids.csv')
     
-        train_image_features = np.load('feat_holder_combined.npy',mmap_mode='r')
+        train_image_features = np.load('feat_holder.npy',mmap_mode='r')
         
         uni_bus = train_to_biz['business_id'].unique()
         
@@ -367,7 +416,7 @@ for num_cluster in ([2]):
         
         test_to_biz = pd.read_csv('test_photo_to_biz.csv')
          
-        test_image_features = np.load('feat_holder_test_combined.npy',mmap_mode='r')
+        test_image_features = np.load('feat_holder_test.npy',mmap_mode='r')
          
         test_image_id = list(np.array(test_to_biz['photo_id'].unique()))
          
@@ -403,7 +452,7 @@ for num_cluster in ([2]):
         
         for nb,lb in enumerate(labels):
             
-            print('predicting',lb)
+            #print('predicting',lb)
             df_test_features = biz_features.drop(['business_id'],axis=1)
             
             bst = model_dict[lb]
