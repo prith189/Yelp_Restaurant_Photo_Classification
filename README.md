@@ -22,6 +22,20 @@ This is a multi label classification problem. However, since XGBoost does not su
 
 The ensemble was built using a Neural network, hence it was treated as a multilabel classification problem by having 9 nodes in the output layer.
 
-1. Download the data from Kaggle
+##Running the model
 
-2. Generate train_cl.csv by 
+1. Download the data from Kaggle and unzip train_photos and test_photos
+
+2. Run the pretraining script to generate the features from images. This will generate two numpy files 'feat_holder.npy' containing
+
+the features for all training photos, and similarly 'feat_holder_test.npy'
+
+3. Generate train_cl.csv by using the clean_train function in the file Model1.py
+
+4. Run Model1.py. This will generate two files 'Model1_Full.npy' and 'Model1_Full_result.npy'
+
+5. Run Model2.py. This will generate eight files 'Model_Full_2.npy', 'Model1_Full_2_result.npy' as so on for each of the different cluster sizes
+
+6. Run Stack_NN.py. This script should generate the final ensembled result.
+
+
