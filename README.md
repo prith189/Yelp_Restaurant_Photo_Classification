@@ -12,11 +12,11 @@ My final submission which secured 16th place is a slightly enhanced version of t
 
 In order to obtain the features for each of the photographs, we use the pretrained inception model and obtain the values of the final fully connected layer for each image.
 
-Model 1: Build a feature set for each business by taking the mean of features of all the images that belong to the business. Build 9 binary classification models (one for each label) using XGBoost. Use the results from this in the final ensemble.
+**Model 1**: Build a feature set for each business by taking the mean of features of all the images that belong to the business. Build 9 binary classification models (one for each label) using XGBoost. Use the results from this in the final ensemble.
 
-Model 2: Build a feature set for each business by first clustering similar images (cluster sizes: 2,3,4,5), and then taking the mean of the features of similar image clusters. Build 9 binary classification models (one for each label) using XGBoost. Use the results from this in the final ensemble (This step will output four different models, one for each cluster size)
+**Model 2**: Build a feature set for each business by first clustering similar images (cluster sizes: 2,3,4,5), and then taking the mean of the features of similar image clusters. Build 9 binary classification models (one for each label) using XGBoost. Use the results from this in the final ensemble (This step will output four different models, one for each cluster size)
 
-Stack_NN: The above two models should give us 5 files (1 from Model 1 and 4 from Model2). These files are ensembled using a Neural Network.
+**Stack_NN**: The above two models should give us 5 files (1 from Model 1 and 4 from Model2). These files are ensembled using a Neural Network.
 
 This is a multi label classification problem. However, since XGBoost does not support multi label classification out of the box, Models 1 and 2 were built as binary classfication problems. This deficiency which does not take the dependancy between the labels into account was taken care of by the ensembling stage.
 
