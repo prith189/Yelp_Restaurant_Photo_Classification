@@ -26,9 +26,7 @@ The ensemble was built using a Neural network, hence it was treated as a multila
 
 1. Download the data from Kaggle and unzip train_photos and test_photos
 
-2. Run the pretraining script to generate the features from images. This will generate two numpy files 'feat_holder.npy' containing
-
-the features for all training photos, and similarly 'feat_holder_test.npy'
+2. Run the pretraining script to generate the features from images. This will generate two numpy files 'feat_holder.npy' containing the features for all training photos, and similarly 'feat_holder_test.npy'
 
 3. Generate train_cl.csv by using the clean_train function in the file Model1.py
 
