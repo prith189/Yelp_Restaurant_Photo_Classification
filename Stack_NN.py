@@ -84,7 +84,7 @@ def get_net(num_feat,num_out):
     clf.add(Dense(input_dim = 65, output_dim = 35))
     clf.add(PReLU())
     clf.add(Dense(input_dim = 35, output_dim=num_out, activation='sigmoid'))
-    clf.compile(optimizer=Adam(), loss='binary_crossentropy')
+    clf.compile(optimizer=Adam(), loss='categorical_crossentropy')
     return clf
 
 start_time = time.time()
